@@ -51,6 +51,7 @@ class ViewController: UIViewController, UNUserNotificationCenterDelegate {
         center.add(request)
         
 //        center.removeAllPendingNotificationRequests()
+        registerCategories()
     }
     
     func registerCategories() {
@@ -58,7 +59,8 @@ class ViewController: UIViewController, UNUserNotificationCenterDelegate {
         center.delegate = self
         
         let show = UNNotificationAction(identifier: "show", title: "Tell me more...", options: .foreground)
-        let category = UNNotificationCategory(identifier: "alarm", actions: [show], intentIdentifiers: [])
+        let remind = UNNotificationAction(identifier: "remind", title: "Remind me later.", options: .foreground)
+        let category = UNNotificationCategory(identifier: "alarm", actions: [show, remind], intentIdentifiers: [])
         
         center.setNotificationCategories([category])
     }
@@ -74,10 +76,19 @@ class ViewController: UIViewController, UNUserNotificationCenterDelegate {
             case UNNotificationDefaultActionIdentifier:
                 // the user swiped to unlock
                 print("Default identifier")
+                let ac = UIAlertController(title: "Default identifier", message: nil, preferredStyle: .alert)
+                ac.addAction(UIAlertAction(title: "OK", style: .default))
+                present(ac, animated: true)
 
             case "show":
                 // the user tapped our "show more info…" button
                 print("Show more information…")
+                let ac = UIAlertController(title: "Show more information…", message: nil, preferredStyle: .alert)
+                ac.addAction(UIAlertAction(title: "OK", style: .default))
+                present(ac, animated: true)
+                
+            case "remind":
+                scheduleLocal()
 
             default:
                 break
